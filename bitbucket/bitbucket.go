@@ -10,7 +10,9 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -32,6 +34,7 @@ type Client struct {
 
 	// Services used for talking to different parts of the Bitbucket Server API.
 	Users        *UsersService
+	Repositories *RepositoriesService
 	PullRequests *PullRequestsService
 }
 
@@ -233,4 +236,35 @@ func (r *Response) populatePageValues(v interface{}) {
 	default:
 		r.pagedResponse = &notPagedResponse
 	}
+}
+
+type SelfLinks struct {
+	Self []NamelessLink
+}
+
+type NamelessLink struct {
+	Href string `json:"href,omitempty"`
+}
+
+type Link struct {
+	Name string `json:"name,omitempty"`
+	Href string `json:"href,omitempty"`
+}
+
+type Time struct {
+	time.Time
+}
+
+func (t *Time) UnmarshalJSON(data []byte) error {
+	millis, err := strconv.ParseInt(string(data), 10, 64)
+	if err != nil {
+		return err
+	}
+
+	*t = Time{time.Unix(0, millis*int64(time.Millisecond))}
+	return nil
+}
+
+func (t Time) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.FormatInt(t.Time.UnixNano()/1000000, 10)), nil
 }

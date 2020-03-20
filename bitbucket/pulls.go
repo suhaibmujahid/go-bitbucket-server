@@ -13,13 +13,37 @@ type PullRequestsService service
 
 // PullRequest represents a Bitbucket Server pull request on a repository.
 type PullRequest struct {
-	ID          int    `json:"id,omitempty"`
-	Version     int    `json:"version,omitempty"`
-	Title       string `json:"title,omitempty"`
-	Description string `json:"description,omitempty"`
-	State       string `json:"state,omitempty"`
-	Open        bool   `json:"open,omitempty"`
-	Closed      bool   `json:"closed,omitempty"`
+	ID           int                `json:"id,omitempty"`
+	Version      int                `json:"version,omitempty"`
+	Title        string             `json:"title,omitempty"`
+	Description  string             `json:"description,omitempty"`
+	State        string             `json:"state,omitempty"`
+	Open         bool               `json:"open,omitempty"`
+	Closed       bool               `json:"closed,omitempty"`
+	CreatedDate  Time               `json:"createdDate,omitempty"`
+	UpdatedDate  Time               `json:"updatedDate,omitempty"`
+	FromRef      *PullRequestRef    `json:"from_ref,omitempty"`
+	ToRef        *PullRequestRef    `json:"toRef,omitempty"`
+	Locked       bool               `json:"locked,omitempty"`
+	Author       *PullRequestUser   `json:"author,omitempty"`
+	Reviewers    []*PullRequestUser `json:"reviewers,omitempty"`
+	Participants []*PullRequestUser `json:"participants,omitempty"`
+	Links        *SelfLinks         `json:"links,omitempty"`
+}
+
+type PullRequestRef struct {
+	ID           string      `json:"id,omitempty"`
+	DisplayId    string      `json:"displayId,omitempty"`
+	LatestCommit string      `json:"latestCommit,omitempty"`
+	Repository   *Repository `json:"repository,omitempty"`
+}
+
+type PullRequestUser struct {
+	User               *User  `json:"user,omitempty"`
+	LastReviewedCommit string `json:"lastReviewedCommit,omitempty"` // this populated only for pull request reviewers
+	Role               string `json:"role,omitempty"`
+	Approved           bool   `json:"approved,omitempty"`
+	Status             string `json:"status,omitempty"`
 }
 
 // PullRequestListOptions specifies the optional parameters to the

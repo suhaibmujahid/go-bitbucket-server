@@ -13,13 +13,14 @@ import (
 type UsersService service
 
 type User struct {
-	Name         string `json:"name,omitempty"`
-	EmailAddress string `json:"emailAddress"`
-	Id           int    `json:"id"`
-	DisplayName  string `json:"displayName"`
-	Active       bool   `json:"active"`
-	Slug         string `json:"slug"`
-	Type         string `json:"type"`
+	Name         string     `json:"name,omitempty"`
+	EmailAddress string     `json:"emailAddress,omitempty"`
+	Id           int        `json:"id,omitempty"`
+	DisplayName  string     `json:"displayName,omitempty"`
+	Active       bool       `json:"active,omitempty"`
+	Slug         string     `json:"slug,omitempty"`
+	Type         string     `json:"type,omitempty"`
+	Links        *SelfLinks `json:"links,omitempty"`
 }
 
 // WhoAmI use the `whoami` endpoint to retrieve the current
