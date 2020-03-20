@@ -1,7 +1,7 @@
 # go-bitbucket-server
 go-bitbucket-server is a Go client library for accessing the Bitbucket Server API v1.
 
-This client is under development , I started with endpoints that is important to me. The goal eventually is to cover the all endpoints. Pull requests are welcomed to implement missed endpoints or fix bugs.  
+> This client is under development , I started with endpoints that is important to me. The goal eventually is to cover the all endpoints. Pull requests are welcomed to implement missed endpoints or fix bugs.  
 
  ## Usage
  
