@@ -78,8 +78,8 @@ type PullRequestListOptions struct {
 // List retrieves a page of pull requests to or from the specified repository.
 //
 // Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp281
-func (s *PullRequestsService) List(ctx context.Context, project, repo string, opts *PullRequestListOptions) ([]*PullRequest, *Response, error) {
-	u := fmt.Sprintf("projects/%s/repos/%s/pull-requests", project, repo)
+func (s *PullRequestsService) List(ctx context.Context, projectKey, repo string, opts *PullRequestListOptions) ([]*PullRequest, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/pull-requests", projectKey, repo)
 	u, err := addOptions(u, opts)
 	if err != nil {
 		return nil, nil, err
@@ -105,8 +105,8 @@ func (s *PullRequestsService) List(ctx context.Context, project, repo string, op
 // Get retrieves a single pull request.
 //
 // Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp284
-func (s *PullRequestsService) Get(ctx context.Context, project, repo string, id int) (*PullRequest, *Response, error) {
-	u := fmt.Sprintf("projects/%s/repos/%s/pull-requests/%v", project, repo, id)
+func (s *PullRequestsService) Get(ctx context.Context, projectKey, repo string, id int) (*PullRequest, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/pull-requests/%v", projectKey, repo, id)
 
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {

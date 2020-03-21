@@ -96,7 +96,9 @@ func NewServerClient(baseURL string, httpClient *http.Client) (*Client, error) {
 	c := &Client{client: httpClient, baseURL: baseEndpoint, UserAgent: userAgent}
 	c.common.client = c
 	c.Users = (*UsersService)(&c.common)
+	c.Repositories = (*RepositoriesService)(&c.common)
 	c.PullRequests = (*PullRequestsService)(&c.common)
+
 	return c, nil
 }
 

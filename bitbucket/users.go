@@ -63,11 +63,11 @@ func (s *UsersService) Get(ctx context.Context, slug string) (*User, *Response, 
 		return nil, nil, err
 	}
 
-	uResp := new(User)
-	resp, err := s.client.Do(ctx, req, uResp)
+	user := new(User)
+	resp, err := s.client.Do(ctx, req, user)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return uResp, resp, nil
+	return user, resp, nil
 }
