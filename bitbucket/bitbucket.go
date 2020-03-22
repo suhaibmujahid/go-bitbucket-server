@@ -197,7 +197,17 @@ func CheckResponse(resp *http.Response) error {
 		return nil
 	}
 
-	return fmt.Errorf("Request failed. Please analyze the request body for more details. Status code: %d", resp.StatusCode)
+	if c := resp.StatusCode; 400 <= c && c <= 415 {
+		var errResp ErrorResponse
+		err := json.NewDecoder(resp.Body).Decode(&errResp)
+		if err == nil {
+			errResp.Response = resp
+			return &errResp
+		}
+
+	}
+
+	return fmt.Errorf("%v %v: %d", resp.Request.Method, resp.Request.URL, resp.StatusCode)
 }
 
 // Response represents Bitbucket Server API response. It wraps http.Response returned from
@@ -269,4 +279,26 @@ func (t *Time) UnmarshalJSON(data []byte) error {
 
 func (t Time) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.FormatInt(t.Time.UnixNano()/1000000, 10)), nil
+}
+
+type ErrorResponse struct {
+	// Response is the HTTP response that caused this error
+	Response *http.Response `json:"-"`
+
+	Errors []Error `json:"errors"`
+}
+
+func (e *ErrorResponse) Error() string {
+	return fmt.Sprintf("%v %v: %d %v",
+		e.Response.Request.Method, e.Response.Request.URL, e.Response.StatusCode, e.Errors)
+}
+
+type Error struct {
+	Context       string `json:"context,omitempty"`
+	Message       string `json:"message"`
+	ExceptionName string `json:"exceptionName,omitempty"`
+}
+
+func (e *Error) Error() string {
+	return e.Message
 }
