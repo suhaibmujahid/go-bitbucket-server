@@ -134,7 +134,7 @@ func (s *RepositoriesService) ListByProject(ctx context.Context, projectKey stri
 //
 // Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp172
 func (s *RepositoriesService) Get(ctx context.Context, projectKey, repositorySlug string) (*Repository, *Response, error) {
-	u := fmt.Sprintf("projects/%s/%s", projectKey, repositorySlug)
+	u := fmt.Sprintf("projects/%s/repos/%s", projectKey, repositorySlug)
 
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
