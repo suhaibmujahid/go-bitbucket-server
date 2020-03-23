@@ -90,13 +90,14 @@ func (l ListUsersPermissions) EncodeValues(key string, v *url.Values) error {
 	appendOptions(key, v, qu)
 
 	for i := 1; i < len(l); i++ {
+		prefix := fmt.Sprintf("%s.%d", key, i)
 		qu, err := query.Values(l[i])
 		if err != nil {
 			return err
 		}
-		v.Add(fmt.Sprintf("%s.%d", key, i), qu.Get(key))
+		v.Add(prefix, qu.Get(key))
 		qu.Del(key)
-		appendOptions(fmt.Sprintf("%s.%d", key, i), v, qu)
+		appendOptions(prefix, v, qu)
 	}
 
 	return nil
