@@ -28,6 +28,7 @@ type Repository struct {
 	State         string           `json:"state,omitempty"`
 	StatusMessage string           `json:"statusMessage,omitempty"`
 	Forkable      bool             `json:"forkable,omitempty"`
+	Origin        *Repository      `json:"origin,omitempty"` // this populated only for forked repositories
 	Project       *Project         `json:"project,omitempty"`
 	Public        bool             `json:"public,omitempty"`
 	Links         *RepositoryLinks `json:"links,omitempty"`
