@@ -2,6 +2,15 @@ package bitbucket
 
 import "time"
 
+// todo: the following are the missed event types:
+//  * mirror:repo_synchronized
+//  * pr:comment:added
+//  * pr:comment:edited
+//  * pr:comment:deleted
+//  * repo:comment:added
+//  * repo:comment:edited
+//  * repo:comment:deleted
+
 const (
 	EventKeyRepositoryPush              = "repo:refs_changed"
 	EventKeyRepositoryModified          = "repo:modified"
@@ -175,12 +184,3 @@ type PullRequestReviewerEvent struct {
 	Participant    *PullRequestUser `json:"participant"`
 	PreviousStatus string           `json:"previousStatus"`
 }
-
-// todo: the following are the missed event types:
-//  * mirror:repo_synchronized
-//  * pr:comment:added
-//  * pr:comment:edited
-//  * pr:comment:deleted
-//  * repo:comment:added
-//  * repo:comment:edited
-//  * repo:comment:deleted

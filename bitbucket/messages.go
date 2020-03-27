@@ -1,3 +1,6 @@
+// This file provides functions for validating payloads from Bitbucket Server Webhooks.
+// Doc: https://confluence.atlassian.com/bitbucketserver070/managing-webhooks-in-bitbucket-server-996644364.html
+
 package bitbucket
 
 import (
