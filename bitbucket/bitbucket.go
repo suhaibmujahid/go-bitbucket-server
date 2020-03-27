@@ -1,3 +1,4 @@
+// Package bitbucket provides a client for using the Bitbucket Server API v1.
 package bitbucket
 
 import (

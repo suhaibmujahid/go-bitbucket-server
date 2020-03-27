@@ -3,16 +3,19 @@ package bitbucket
 import "time"
 
 const (
-	EventKeyPullRequestBranchUpdated = "pr:from_ref_updated"
-	EventKeyPullRequestOpened        = "pr:opened"
-	EventKeyPullRequestDeclined      = "pr:declined"
-	EventKeyPullRequestDeleted       = "pr:deleted"
-	EventKeyPullRequestModified      = "pr:modified"
-	EventKeyPullRequestMerged        = "pr:merged"
-	EventKeyPullRequestNeedsWork     = "pr:reviewer:needs_work"
-	EventKeyPullRequestUpdated       = "pr:reviewer:updated"
-	EventKeyPullRequestApproved      = "pr:reviewer:approved"
-	EventKeyPullRequestUnapproved    = "pr:reviewer:unapproved"
+	EventKeyRepositoryPush              = "repo:refs_changed"
+	EventKeyRepositoryModified          = "repo:modified"
+	EventKeyRepositoryForked            = "repo:forked"
+	EventKeyPullRequestOpened           = "pr:opened"
+	EventKeyPullRequestReviewersUpdated = "pr:reviewer:updated"
+	EventKeyPullRequestModified         = "pr:modified"
+	EventKeyPullRequestBranchUpdated    = "pr:from_ref_updated"
+	EventKeyPullRequestApproved         = "pr:reviewer:approved"
+	EventKeyPullRequestUnapproved       = "pr:reviewer:unapproved"
+	EventKeyPullRequestNeedsWork        = "pr:reviewer:needs_work"
+	EventKeyPullRequestMerged           = "pr:merged"
+	EventKeyPullRequestDeclined         = "pr:declined"
+	EventKeyPullRequestDeleted          = "pr:deleted"
 )
 
 // PushEvent is triggered when a user pushes one or more commits, branch created or deleted, or tag created or deleted.
@@ -162,6 +165,8 @@ type PullRequestUnapprovedEvent PullRequestReviewerEvent
 // Doc: https://confluence.atlassian.com/bitbucketserver070/event-payload-996644369.html#Eventpayload-Needswork
 type PullRequestNeedsWorkEvent PullRequestReviewerEvent
 
+// PullRequestReviewerEvent present the payload schema for events related to pull
+// request review suh `PullRequestNeedsWorkEvent` and `PullRequestApprovedEvent`.
 type PullRequestReviewerEvent struct {
 	EventKey       string           `json:"eventKey"`
 	Date           time.Time        `json:"date"`
