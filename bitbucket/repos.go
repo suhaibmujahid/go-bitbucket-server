@@ -43,6 +43,16 @@ type RepositoryLinks struct {
 	Clone []Link         `json:"clone,omitempty"`
 }
 
+//todo: this could be merged with Ref, PullRequestTarget and PullRequestRef
+type Branch struct {
+	ID              string `json:"id"`
+	DisplayID       string `json:"displayId"`
+	Type            string `json:"type"`
+	LatestCommit    string `json:"latestCommit"`
+	LatestChangeset string `json:"latestChangeset"`
+	IsDefault       bool   `json:"isDefault,omitempty"`
+}
+
 //todo: add the option values as consts
 type ListRepositoriesOptions struct {
 	// Name (optional) if specified, this will limit the resulting repository
@@ -185,4 +195,24 @@ func (s *RepositoriesService) ListRecent(ctx context.Context, opts *RecentReposO
 	}
 
 	return repos, resp, nil
+}
+
+// GetDefaultBranch returns the default branch of the repository.
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp204
+func (s *RepositoriesService) GetDefaultBranch(ctx context.Context, projectKey, repositorySlug string) (*Branch, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/branches/default", projectKey, repositorySlug)
+
+	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	b := new(Branch)
+	resp, err := s.client.Do(ctx, req, b)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return b, resp, nil
 }
