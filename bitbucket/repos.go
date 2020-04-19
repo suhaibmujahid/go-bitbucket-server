@@ -96,7 +96,7 @@ func (s *RepositoriesService) List(ctx context.Context, opts *ListRepositoriesOp
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -105,7 +105,7 @@ func (s *RepositoriesService) List(ctx context.Context, opts *ListRepositoriesOp
 	page := &pagedResponse{
 		Values: &repos,
 	}
-	resp, err := s.client.Do(ctx, req, page)
+	resp, err := s.client.Do(req, page)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -124,7 +124,7 @@ func (s *RepositoriesService) ListByProject(ctx context.Context, projectKey stri
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -133,7 +133,7 @@ func (s *RepositoriesService) ListByProject(ctx context.Context, projectKey stri
 	page := &pagedResponse{
 		Values: &repos,
 	}
-	resp, err := s.client.Do(ctx, req, page)
+	resp, err := s.client.Do(req, page)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -147,13 +147,13 @@ func (s *RepositoriesService) ListByProject(ctx context.Context, projectKey stri
 func (s *RepositoriesService) Get(ctx context.Context, projectKey, repositorySlug string) (*Repository, *Response, error) {
 	u := fmt.Sprintf("projects/%s/repos/%s", projectKey, repositorySlug)
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	repo := new(Repository)
-	resp, err := s.client.Do(ctx, req, repo)
+	resp, err := s.client.Do(req, repo)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -180,7 +180,7 @@ func (s *RepositoriesService) ListRecent(ctx context.Context, opts *RecentReposO
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -189,7 +189,7 @@ func (s *RepositoriesService) ListRecent(ctx context.Context, opts *RecentReposO
 	page := &pagedResponse{
 		Values: &repos,
 	}
-	resp, err := s.client.Do(ctx, req, page)
+	resp, err := s.client.Do(req, page)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -203,13 +203,13 @@ func (s *RepositoriesService) ListRecent(ctx context.Context, opts *RecentReposO
 func (s *RepositoriesService) GetDefaultBranch(ctx context.Context, projectKey, repositorySlug string) (*Branch, *Response, error) {
 	u := fmt.Sprintf("projects/%s/repos/%s/branches/default", projectKey, repositorySlug)
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	b := new(Branch)
-	resp, err := s.client.Do(ctx, req, b)
+	resp, err := s.client.Do(req, b)
 	if err != nil {
 		return nil, resp, err
 	}

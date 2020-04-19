@@ -85,7 +85,7 @@ func (s *PullRequestsService) List(ctx context.Context, projectKey, repo string,
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -94,7 +94,7 @@ func (s *PullRequestsService) List(ctx context.Context, projectKey, repo string,
 	page := &pagedResponse{
 		Values: &pulls,
 	}
-	resp, err := s.client.Do(ctx, req, page)
+	resp, err := s.client.Do(req, page)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -108,13 +108,13 @@ func (s *PullRequestsService) List(ctx context.Context, projectKey, repo string,
 func (s *PullRequestsService) Get(ctx context.Context, projectKey, repo string, id int) (*PullRequest, *Response, error) {
 	u := fmt.Sprintf("projects/%s/repos/%s/pull-requests/%v", projectKey, repo, id)
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	pull := new(PullRequest)
-	resp, err := s.client.Do(ctx, req, pull)
+	resp, err := s.client.Do(req, pull)
 	if err != nil {
 		return nil, resp, err
 	}

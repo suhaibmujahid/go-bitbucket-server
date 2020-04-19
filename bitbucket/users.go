@@ -29,13 +29,13 @@ type User struct {
 // authenticated user slug as string.
 func (s *UsersService) WhoAmI(ctx context.Context) (string, *Response, error) {
 	// we use slash at the beginning in this case to avoid having the URL relative to the suffix `rest/api/1.0/`
-	req, err := s.client.NewRequest("GET", "/plugins/servlet/applinks/whoami", nil)
+	req, err := s.client.NewRequest(ctx, "GET", "/plugins/servlet/applinks/whoami", nil)
 	if err != nil {
 		return "", nil, err
 	}
 
 	buf := new(bytes.Buffer)
-	resp, err := s.client.Do(ctx, req, buf)
+	resp, err := s.client.Do(req, buf)
 	if err != nil {
 		return "", resp, err
 	}
@@ -60,13 +60,13 @@ func (s *UsersService) Myself(ctx context.Context) (*User, *Response, error) {
 func (s *UsersService) Get(ctx context.Context, slug string) (*User, *Response, error) {
 	u := fmt.Sprintf("users/%s", slug)
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	user := new(User)
-	resp, err := s.client.Do(ctx, req, user)
+	resp, err := s.client.Do(req, user)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -138,7 +138,7 @@ func (s *UsersService) List(ctx context.Context, opts *ListUsersOptions) ([]*Use
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -147,7 +147,7 @@ func (s *UsersService) List(ctx context.Context, opts *ListUsersOptions) ([]*Use
 	page := &pagedResponse{
 		Values: &users,
 	}
-	resp, err := s.client.Do(ctx, req, page)
+	resp, err := s.client.Do(req, page)
 	if err != nil {
 		return nil, resp, err
 	}

@@ -28,13 +28,13 @@ type WebHookListOptions struct {
 func (s *RepositoriesService) CreateWebHooks(ctx context.Context, projectKey, repositorySlug string, hook *WebHook) (*WebHook, *Response, error) {
 	u := fmt.Sprintf("projects/%s/repos/%s/webhooks", projectKey, repositorySlug)
 
-	req, err := s.client.NewRequest("POST", u, hook)
+	req, err := s.client.NewRequest(ctx, "POST", u, hook)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	v := new(WebHook)
-	resp, err := s.client.Do(ctx, req, v)
+	resp, err := s.client.Do(req, v)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -52,7 +52,7 @@ func (s *RepositoriesService) ListWebHooks(ctx context.Context, projectKey, repo
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -61,7 +61,7 @@ func (s *RepositoriesService) ListWebHooks(ctx context.Context, projectKey, repo
 	page := &pagedResponse{
 		Values: &hooks,
 	}
-	resp, err := s.client.Do(ctx, req, page)
+	resp, err := s.client.Do(req, page)
 	if err != nil {
 		return nil, resp, err
 	}
