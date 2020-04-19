@@ -1,4 +1,5 @@
 # go-bitbucket-server
+[![Go](https://github.com/suhaibmujahid/go-bitbucket-server/workflows/Go/badge.svg)](https://github.com/suhaibmujahid/go-bitbucket-server/actions?query=workflow%3AGo)
 
 go-bitbucket-server is a [Go](https://golang.orgs) client library for accessing the 
 [Bitbucket](https://www.atlassian.com/software/bitbucket) Server API v1.
