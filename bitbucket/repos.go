@@ -263,3 +263,24 @@ func (s *RepositoriesService) GetDefaultBranch(ctx context.Context, projectKey, 
 
 	return b, resp, nil
 }
+
+// Update repository in a project. To update a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp173
+func (s *RepositoriesService) Update(ctx context.Context, projectKey, repoSlug string, repo *Repository) (*Repository, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s", projectKey, repoSlug)
+
+	req, err := s.client.NewRequest(ctx, "POST", u, repo)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	respRepo := new(Repository)
+	resp, err := s.client.Do(req, &respRepo)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return respRepo, resp, nil
+}
