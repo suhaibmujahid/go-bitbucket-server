@@ -28,6 +28,10 @@ type Client struct {
 	// User agent used when communicating with the Bitbucket Server API.
 	UserAgent string
 
+	// Basic authentication credentials
+	Username string
+	Password string
+
 	common service
 
 	// Base URL for API requests.
@@ -133,6 +137,10 @@ func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body int
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), buf)
 	if err != nil {
 		return nil, err
+	}
+
+	if c.Username != "" {
+		req.SetBasicAuth(c.Username, c.Password)
 	}
 
 	if body != nil {
