@@ -109,6 +109,31 @@ func (s *RepositoriesService) Create(ctx context.Context, projectKey, repoName s
 	return repo, resp, nil
 }
 
+// Fork repository in a project. To fork a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp174
+func (s *RepositoriesService) Fork(ctx context.Context, projectKey, repoSlug, repoName string) (*Repository, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s", projectKey, repoSlug)
+	b := map[string]interface{}{
+		"name": repoName,
+		"project": map[string]interface{}{"key": projectKey},
+	}
+
+	req, err := s.client.NewRequest(ctx, "POST", u, b)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	repo := new(Repository)
+	resp, err := s.client.Do(req, &repo)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return repo, resp, nil
+}
+
 // List retrieves a page of repositories based on the options that control the search.
 //
 // Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp393
