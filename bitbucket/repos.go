@@ -87,6 +87,28 @@ type ListRepositoriesOptions struct {
 	ListOptions
 }
 
+// Create repository in a project. To create a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp168
+func (s *RepositoriesService) Create(ctx context.Context, projectKey, repoName string) (*Repository, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos", projectKey)
+	b := map[string]string{"name": repoName}
+
+	req, err := s.client.NewRequest(ctx, "POST", u, b)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	repo := new(Repository)
+	resp, err := s.client.Do(req, &repo)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return repo, resp, nil
+}
+
 // List retrieves a page of repositories based on the options that control the search.
 //
 // Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp393
