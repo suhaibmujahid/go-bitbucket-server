@@ -87,6 +87,26 @@ type ListRepositoriesOptions struct {
 	ListOptions
 }
 
+// Add a label to a repository.
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp254
+func (s *RepositoriesService) AddLabel(ctx context.Context, projectKey, repoSlug, label string) (*Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/labels", projectKey, repoSlug)
+	b := map[string]string{"name": label}
+
+	req, err := s.client.NewRequest(ctx, "POST", u, b)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
 // Create repository in a project. To create a personal repository the projectKey
 // should be ~ then user slug (e.g., ~suhaib).
 //
