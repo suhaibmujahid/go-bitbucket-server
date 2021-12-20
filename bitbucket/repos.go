@@ -87,6 +87,73 @@ type ListRepositoriesOptions struct {
 	ListOptions
 }
 
+// Add a label to a repository.
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp254
+func (s *RepositoriesService) AddLabel(ctx context.Context, projectKey, repoSlug, label string) (*Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/labels", projectKey, repoSlug)
+	b := map[string]string{"name": label}
+
+	req, err := s.client.NewRequest(ctx, "POST", u, b)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
+// Create repository in a project. To create a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp168
+func (s *RepositoriesService) Create(ctx context.Context, projectKey, repoName string) (*Repository, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos", projectKey)
+	b := map[string]string{"name": repoName}
+
+	req, err := s.client.NewRequest(ctx, "POST", u, b)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	repo := new(Repository)
+	resp, err := s.client.Do(req, &repo)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return repo, resp, nil
+}
+
+// Fork repository in a project. To fork a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp174
+func (s *RepositoriesService) Fork(ctx context.Context, projectKey, repoSlug, repoName string) (*Repository, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s", projectKey, repoSlug)
+	b := map[string]interface{}{
+		"name": repoName,
+		"project": map[string]interface{}{"key": projectKey},
+	}
+
+	req, err := s.client.NewRequest(ctx, "POST", u, b)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	repo := new(Repository)
+	resp, err := s.client.Do(req, &repo)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return repo, resp, nil
+}
+
 // List retrieves a page of repositories based on the options that control the search.
 //
 // Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp393
@@ -215,4 +282,113 @@ func (s *RepositoriesService) GetDefaultBranch(ctx context.Context, projectKey, 
 	}
 
 	return b, resp, nil
+}
+
+// Get group permissions for a repository in a project. To get the group permissions for a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp270
+func (s *RepositoriesService) GetGroupPermissions(ctx context.Context, projectKey, repoSlug string) ([]*GroupPermission, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/permissions/groups", projectKey, repoSlug)
+
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var groupPerms []*GroupPermission
+	page := &pagedResponse{
+		Values: &groupPerms,
+	}
+	resp, err := s.client.Do(req, page)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return groupPerms, resp, nil
+}
+
+// Get user permissions for a repository in a project. To get the user permissions for a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp276
+func (s *RepositoriesService) GetUserPermissions(ctx context.Context, projectKey, repoSlug string) ([]*UserPermission, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/permissions/users", projectKey, repoSlug)
+
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var userPerms []*UserPermission
+	page := &pagedResponse{
+		Values: &userPerms,
+	}
+	resp, err := s.client.Do(req, page)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return userPerms, resp, nil
+}
+
+// Set group permissions for a repository in a project. To set the group permissions for a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp269
+func (s *RepositoriesService) SetGroupPermission(ctx context.Context, projectKey, repoSlug string, gPerm *GroupPermission) (*Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/permissions/groups?permission=%s&name=%s", projectKey, repoSlug, gPerm.Permission, gPerm.Group.Name)
+
+	req, err := s.client.NewRequest(ctx, "PUT", u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
+// Set user permissions for a repository in a project. To set the user permissions for a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp275
+func (s *RepositoriesService) SetUserPermission(ctx context.Context, projectKey, repoSlug string, uPerm *UserPermission) (*Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s/permissions/users?permission=%s&name=%s", projectKey, repoSlug, uPerm.Permission, uPerm.User.Name)
+
+	req, err := s.client.NewRequest(ctx, "PUT", u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
+// Update repository in a project. To update a personal repository the projectKey
+// should be ~ then user slug (e.g., ~suhaib).
+//
+// Bitbucket Server API doc: https://docs.atlassian.com/bitbucket-server/rest/7.0.1/bitbucket-rest.html#idp173
+func (s *RepositoriesService) Update(ctx context.Context, projectKey, repoSlug string, repo *Repository) (*Repository, *Response, error) {
+	u := fmt.Sprintf("projects/%s/repos/%s", projectKey, repoSlug)
+
+	req, err := s.client.NewRequest(ctx, "POST", u, repo)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	respRepo := new(Repository)
+	resp, err := s.client.Do(req, &respRepo)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return respRepo, resp, nil
 }
